@@ -14,22 +14,26 @@ import {
 } from "react-native";
 
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
+import phonecode from "../data/phonecode.json";
 import {
   faEllipsisVertical,
   faWindowClose,
 } from "@fortawesome/free-solid-svg-icons";
 import { useEffect, useState } from "react";
+import DropDownPicker from "react-native-dropdown-picker";
 
 export default function Home() {
   const [NoHp, SetNoHp] = useState("");
-
-  const UrlWa = `https://api.whatsapp.com/send/?phone=%2B62${NoHp}`;
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
+  const [items, setItems] = useState(phonecode);
+  const [code, setCode] = useState("");
+  const UrlWa = `https://api.whatsapp.com/send/?phone=%${value}${NoHp}`;
 
   const SendButton = () => {
     if (NoHp != null) {
       Linking.openURL(UrlWa);
     }
-    window.localStorage.setItem("history", NoHp);
   };
 
   const windowDimensions = Dimensions.get("window");
@@ -51,27 +55,46 @@ export default function Home() {
         <View
           style={{
             flexDirection: "row",
+            marginBottom: 10,
+            justifyContent: "space-between",
+            gap: 4,
           }}
         >
+          <DropDownPicker
+            key={phonecode.map((i) => i.name)}
+            schema={{
+              label: "dial_code",
+              value: "dial_code",
+            }}
+            style={{ width: 150 }}
+            containerStyle={{ width: 150 }}
+            open={open}
+            value={value}
+            items={items}
+            setOpen={setOpen}
+            setValue={setValue}
+            searchable={true}
+            placeholder="Kode Negara"
+          />
           <TextInput
             style={{
               borderStyle: "solid",
               flex: 1,
               borderColor: "grey",
               opacity: 3,
-              marginRight: 10,
               padding: 5,
               borderRadius: 6,
               borderWidth: 1,
             }}
+            maxLength={12}
             keyboardAppearance="default"
             inputMode="numeric"
             placeholder="Masukkan Nomor Handphone"
             onChangeText={(value) => SetNoHp(value)}
             defaultValue={NoHp}
           />
-          <Button title="Kirim" onPress={SendButton} color={"green"} />
         </View>
+        <Button title="Kirim" onPress={SendButton} color={"green"} />
         <Text style={{ marginTop: 30, fontSize: 16, fontWeight: "bold" }}>
           Tatacara Penggunaan Aplikasi
         </Text>
