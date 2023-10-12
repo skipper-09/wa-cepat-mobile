@@ -80,7 +80,7 @@ export default function Home() {
             style={{
               borderStyle: "solid",
               flex: 1,
-              borderColor: "grey",
+              borderColor: "black",
               opacity: 3,
               padding: 5,
               borderRadius: 6,
